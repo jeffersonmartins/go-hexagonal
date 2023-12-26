@@ -2,23 +2,22 @@ package application_test
 
 import (
 	"testing"
-
+	"github.com/jeffersonmartins/go-hexagonal/mocks/application"
 	gomock "github.com/golang/mock/gomock"
-	"github.com/jeffersonmartins/go-hexagonal/application"
-	mock_application "github.com/jeffersonmartins/go-hexagonal/application/mocks"
-	"github.com/stretchr/testify/require"
+	testify "github.com/stretchr/testify/require"
 )
 
 func TestProductService_Get(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	product := mock_application.NewMockProductInterface(ctrl)
-	persistence := mock_application.NewMockProductPersistenceInterface(ctrl)
+	product := NewMockProductInterface(ctrl)
+	persistence := NewMockProductPersistenceInterface(ctrl)
 
 	persistence.EXPECT().Get(gomock.Any()).Return(product, nil).AnyTimes()
 
-	service := application.ProductService{Persistence: persistence}
+	service = &ProductService{persistence: persistence
+	}
 
 	result, err := service.Get("abc")
 	require.Nil(t, err)
